@@ -1,5 +1,4 @@
 // Global variables
-// TEST COMMENT PATRICK SEUTE
 
 var COLORS = ['spades', 'hearts', 'diamonds', 'clubs'];
 // 11 has either value of 11 or 1
@@ -78,6 +77,13 @@ function Player(name) {
 	this.hand = [];
 	// TODO: Maybe add a action field. That describes what action player takes (stand, hit, ..);
 	// Or maybe it's better implemented with prototype functions
+}
+
+//Takes array of card objects and adds them to the player's hand
+Player.prototype.addCardsToHand = function(cards){
+	for(var i = 0; i < cards.length; i++){
+		this.hand.push(cards[i]);
+	}
 }
 
 // Table Class
