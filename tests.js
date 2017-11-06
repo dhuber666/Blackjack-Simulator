@@ -46,6 +46,19 @@ describe('blackjack deck', function() {
 		expect(cardsShown).toBe(true);
 	});
 
+	it('should have a shuffle function that shuffles the current deck', function() {
+		deck.initialize();
+		var firstCardUnshuffled = deck.cards[0];
+		// actually not yet shuffled
+		var firstCardShuffled = deck.cards[0];
+
+		expect(firstCardShuffled === firstCardUnshuffled).toBe(true);
+		deck.shuffle();
+		var firstCardShuffled = deck.cards[0];
+
+		expect(firstCardShuffled === firstCardUnshuffled).toBe(false);
+	});
+
 	describe('blackjack cards', function() {
 		it('should be an object with value and color property', function() {
 			var card = new Card(10, 'ace');
@@ -53,5 +66,37 @@ describe('blackjack deck', function() {
 			expect(card.value).toBeTruthy();
 			expect(card.color).toBeTruthy();
 		});
+		it('should have a hidden property  that is defaulted to false', function() {
+			var card = new Card(10, 'ace');
+
+			expect(card.hidden).toBe(true);
+		});
+	});
+});
+
+describe('Dealer', function() {
+	var deck;
+	var dealer;
+	beforeEach(function() {
+		deck = new Deck();
+		dealer = new Dealer(deck);
+	});
+
+	it('should have access to a blackjack deck', function() {
+		var cardsShown = dealer.deck.showDeck();
+		expect(cardsShown).toBe(true);
+	});
+
+	it('should have a dealCards function to deal out cards from the deck and decide how many cards', function() {
+		// dealCards return array with cards
+		var dealedCards = dealer.dealCards(3);
+		expect(dealedCards.length).toBe(3);
+
+		expect(function() {
+			dealer.dealCards(0);
+		}).toThrow('args needs to be 1 or < 312');
+		expect(function() {
+			dealer.dealCards(500);
+		}).toThrow('args needs to be 1 or < 312');
 	});
 });
