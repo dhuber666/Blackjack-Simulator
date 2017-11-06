@@ -51,6 +51,7 @@ Deck.prototype.shuffle = function() {
 function Dealer(deck) {
 	this.deck = deck;
 	this.deck.initialize();
+	this.deck.shuffle();
 }
 
 // argument: quant = quantity (how many)
@@ -67,6 +68,24 @@ Dealer.prototype.dealCards = function(quant) {
 
 	return drawnCards;
 };
+
+// Player class
+// args: name of the player
+
+function Player(name) {
+	this.name = name;
+	this.hand = [];
+	// TODO: Maybe add a action field. That describes what action player takes (stand, hit, ..);
+	// Or maybe it's better implemented with prototype functions
+}
+
+// Table Class
+// args: Player array and Dealer
+
+function Table(dealer, players) {
+	this.dealer = dealer;
+	this.players = players;
+}
 
 // Card Class
 // args: value and color of a card :)
