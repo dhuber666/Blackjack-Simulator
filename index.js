@@ -1,4 +1,5 @@
 // Global variables
+// TEST COMMENT PATRICK SEUTE
 
 var COLORS = ['spades', 'hearts', 'diamonds', 'clubs'];
 // 11 has either value of 11 or 1
