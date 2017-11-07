@@ -141,5 +141,35 @@ describe('Table', function() {
 	});
 
 	// own section for testing the simulation
-	describe('Simulate', function() {});
+	describe('Simulate', function() {
+		var players;
+		var deck;
+		var dealer;
+		var table;
+
+		beforeEach(function() {
+			players = [new Player('dominik'), new Player('magdalena')];
+			deck = new Deck();
+			dealer = new Dealer(deck);
+			table = new Table(dealer, players);
+		});
+
+		it('should give 2 cards to every player in the players array when simulation runs 1 round', function() {
+			table.simulate(1);
+
+			expect(table.players[0].hand[0]).toBeTruthy();
+			expect(table.players[1].hand[1]).toBeTruthy();
+			// 3rd card should be false (just 2 cards)
+			expect(table.players[0].hand[2]).toBeFalsy();
+		});
+
+		it('should give 6 cards to every player in the players array when simulation runs 3 rounds', function() {
+			table.simulate(3);
+
+			expect(table.players[0].hand[5]).toBeTruthy();
+			expect(table.players[1].hand[5]).toBeTruthy();
+			// 3rd card should be false (just 2 cards)
+			expect(table.players[0].hand[6]).toBeFalsy();
+		});
+	});
 });

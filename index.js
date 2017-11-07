@@ -79,6 +79,13 @@ function Player(name) {
 	// Or maybe it's better implemented with prototype functions
 }
 
+//Takes array of card objects and adds them to the player's hand
+Player.prototype.addCardsToHand = function(cards) {
+	for (var i = 0; i < cards.length; i++) {
+		this.hand.push(cards[i]);
+	}
+};
+
 // Table Class
 // args: Player array and Dealer
 
@@ -109,8 +116,9 @@ Table.prototype.simulate = function(numberOfRounds) {
 	for (var i = 0; i < numberOfRounds; i++) {
 		//give every player 2 cards to their hand
 		this.players.forEach(function(player) {
-			//
-		});
+			var cards = this.dealer.dealCards(2);
+			player.addCardsToHand(cards);
+		}, this);
 	}
 };
 
