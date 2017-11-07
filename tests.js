@@ -111,15 +111,14 @@ describe('Player', function() {
 		expect(player.name).toBe('dominik');
 		expect(player.hand.length).toBe(0);
 	});
-	
-	it('should have a function to add cards to the hand array', function(){
+
+	it('should have a function to add cards to the hand array', function() {
 		deck = new Deck();
 		dealer = new Dealer(deck);
 		var dealedCards = dealer.dealCards(2);
 		player.addCardsToHand(dealedCards);
 		expect(player.hand.length).toBe(2);
 	});
-	
 });
 
 // this is the "main object" - a table has a dealer and n players
@@ -140,4 +139,7 @@ describe('Table', function() {
 		expect(table.players.length).toBe(2);
 		expect(table.dealer.deck).toBeTruthy();
 	});
+
+	// own section for testing the simulation
+	describe('Simulate', function() {});
 });

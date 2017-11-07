@@ -69,8 +69,6 @@ Dealer.prototype.dealCards = function(quant) {
 	return drawnCards;
 };
 
-
-
 // Player class
 // args: name of the player
 
@@ -80,8 +78,6 @@ function Player(name) {
 	// TODO: Maybe add a action field. That describes what action player takes (stand, hit, ..);
 	// Or maybe it's better implemented with prototype functions
 }
-
-
 
 // Table Class
 // args: Player array and Dealer
@@ -95,21 +91,28 @@ function Table(dealer, players) {
 // here the rounds get simulated
 // args: number of how often you want to simulate
 
-Table.prototype.simulate = function (numberOfRounds) {
-	// hand out cards 2 for each player. 
+Table.prototype.simulate = function(numberOfRounds) {
+	// hand out cards 2 for each player.
 	// hand 1 card to the dealer heads up (or active) and a 2nd heads down (not active)
 	// calculate the player action depending on different factors:
-		// what card the dealer has
-		// what cards the player has
+	// what card the dealer has
+	// what cards the player has
 	// depending on that take different actions:
-		// split
-		// hit
-		// new card
-		// double down
-		// pay insurance (if dealer has Ace)
-		// ... 
+	// split
+	// hit
+	// new card
+	// double down
+	// pay insurance (if dealer has Ace)
+	// ...
 
-}
+	//run simulation 'numberOfRounds'.times
+	for (var i = 0; i < numberOfRounds; i++) {
+		//give every player 2 cards to their hand
+		this.players.forEach(function(player) {
+			//
+		});
+	}
+};
 
 // Card Class
 // args: value and color of a card :)
