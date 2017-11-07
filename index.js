@@ -69,6 +69,8 @@ Dealer.prototype.dealCards = function(quant) {
 	return drawnCards;
 };
 
+
+
 // Player class
 // args: name of the player
 
@@ -79,12 +81,7 @@ function Player(name) {
 	// Or maybe it's better implemented with prototype functions
 }
 
-//Takes array of card objects and adds them to the player's hand
-Player.prototype.addCardsToHand = function(cards){
-	for(var i = 0; i < cards.length; i++){
-		this.hand.push(cards[i]);
-	}
-}
+
 
 // Table Class
 // args: Player array and Dealer
@@ -92,6 +89,25 @@ Player.prototype.addCardsToHand = function(cards){
 function Table(dealer, players) {
 	this.dealer = dealer;
 	this.players = players;
+}
+
+// the method where main magic is happening
+// here the rounds get simulated
+// args: number of how often you want to simulate
+
+Table.prototype.simulate = function (numberOfRounds) {
+	// hand out cards 2 for each player. 
+	// calculate the player action depending on different factors:
+		// what card the dealer has
+		// what cards the player has
+	// depending on that take different actions:
+		// split
+		// hit
+		// new card
+		// double down
+		// pay insurance (if dealer has Ace)
+		// ... 
+	
 }
 
 // Card Class
