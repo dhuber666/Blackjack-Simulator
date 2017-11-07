@@ -79,6 +79,13 @@ function Player(name) {
 	// Or maybe it's better implemented with prototype functions
 }
 
+//Takes array of card objects and adds them to the player's hand
+Player.prototype.addCardsToHand = function(cards){
+	for(var i = 0; i < cards.length; i++){
+		this.hand.push(cards[i]);
+	}
+}
+
 // Table Class
 // args: Player array and Dealer
 
