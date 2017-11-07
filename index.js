@@ -126,8 +126,40 @@ Table.prototype.simulate = function(numberOfRounds) {
 		var cards = this.dealer.dealCards(2);
 		cards[1].hidden = true;
 		this.dealer.addCardsToHand(cards, this.dealer);
+
+		// compute
+
+		this.computePlayerAction(this.dealer.hand, this.players) {
+
+		}
 	}
 };
+
+// this computes the action the players want to take and returns it
+// args: the current dealer and all players
+Table.prototype.computePlayerAction = function (dealerHand, players) {
+	players.forEach(function(player) {
+		var playerHand = player.hand;
+		var actionCase = this.getPlayerAction(dealerHand, playerHand);
+
+	}, this)
+}
+
+// this gets just the action and returns it for a single player
+// args: dealer hand and player hand
+
+Table.prototype.getPlayerAction = function(dealerHand, playerHand) {
+	// loop through dealerHand
+	dealerHand.forEach(function(dealerCard) {
+		// if card is not hidden loop through player cards
+		if(!card.hidden) {
+			playerHand.forEach(function(playerCard) {
+				// now we have each card and can compare it to the dealers card(s) and do something with it.
+				// TODO: Finish this beast + Tests
+			})
+		}
+	})
+}
 
 // Card Class
 // args: value and color of a card :)
