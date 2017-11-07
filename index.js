@@ -52,6 +52,7 @@ function Dealer(deck) {
 	this.deck = deck;
 	this.deck.initialize();
 	this.deck.shuffle();
+	this.hand = [];
 }
 
 // argument: quant = quantity (how many)
@@ -69,6 +70,13 @@ Dealer.prototype.dealCards = function(quant) {
 	return drawnCards;
 };
 
+//Takes array of card objects and adds them to the player's hand
+Dealer.prototype.addCardsToHand = function(cards, target) {
+	for (var i = 0; i < cards.length; i++) {
+		target.hand.push(cards[i]);
+	}
+};
+
 // Player class
 // args: name of the player
 
@@ -78,13 +86,6 @@ function Player(name) {
 	// TODO: Maybe add a action field. That describes what action player takes (stand, hit, ..);
 	// Or maybe it's better implemented with prototype functions
 }
-
-//Takes array of card objects and adds them to the player's hand
-Player.prototype.addCardsToHand = function(cards) {
-	for (var i = 0; i < cards.length; i++) {
-		this.hand.push(cards[i]);
-	}
-};
 
 // Table Class
 // args: Player array and Dealer
@@ -117,8 +118,14 @@ Table.prototype.simulate = function(numberOfRounds) {
 		//give every player 2 cards to their hand
 		this.players.forEach(function(player) {
 			var cards = this.dealer.dealCards(2);
-			player.addCardsToHand(cards);
+
+			this.dealer.addCardsToHand(cards, player);
 		}, this);
+
+		// give the Dealer 2 cards. Set the 2nd to hidden=true
+		var cards = this.dealer.dealCards(2);
+		cards[1].hidden = true;
+		this.dealer.addCardsToHand(cards, this.dealer);
 	}
 };
 
@@ -129,5 +136,5 @@ function Card(value, color) {
 	this.value = value;
 	this.color = color;
 	// card is hidden default
-	this.hidden = true;
+	this.hidden = false;
 }

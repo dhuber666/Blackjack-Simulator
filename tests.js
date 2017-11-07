@@ -69,7 +69,7 @@ describe('blackjack deck', function() {
 		it('should have a hidden property  that is defaulted to false', function() {
 			var card = new Card(10, 'ace');
 
-			expect(card.hidden).toBe(true);
+			expect(card.hidden).toBe(false);
 		});
 	});
 });
@@ -116,7 +116,7 @@ describe('Player', function() {
 		deck = new Deck();
 		dealer = new Dealer(deck);
 		var dealedCards = dealer.dealCards(2);
-		player.addCardsToHand(dealedCards);
+		dealer.addCardsToHand(dealedCards, player);
 		expect(player.hand.length).toBe(2);
 	});
 });
@@ -168,8 +168,33 @@ describe('Table', function() {
 
 			expect(table.players[0].hand[5]).toBeTruthy();
 			expect(table.players[1].hand[5]).toBeTruthy();
-			// 3rd card should be false (just 2 cards)
+			// 7th card should be false (just 6 cards)
 			expect(table.players[0].hand[6]).toBeFalsy();
+		});
+
+		it('should give 2 cards to the dealer when simulated 1 time', function() {
+			table.simulate(1);
+
+			expect(table.dealer.hand[0]).toBeTruthy();
+			expect(table.dealer.hand[1]).toBeTruthy();
+
+			expect(table.dealer.hand[2]).toBeFalsy();
+		});
+
+		it('should give 6 cards to the dealer when simulated 3 times', function() {
+			table.simulate(3);
+
+			expect(table.dealer.hand[0]).toBeTruthy();
+			expect(table.dealer.hand[5]).toBeTruthy();
+
+			expect(table.dealer.hand[6]).toBeFalsy();
+		});
+
+		it('should have the dealers 2nd card hidden and the first shown', function() {
+			table.simulate(1);
+
+			expect(table.dealer.hand[0].hidden).toBeFalsy();
+			expect(table.dealer.hand[1].hidden).toBeTruthy();
 		});
 	});
 });
