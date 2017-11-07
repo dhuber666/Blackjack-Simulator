@@ -97,6 +97,7 @@ function Table(dealer, players) {
 
 Table.prototype.simulate = function (numberOfRounds) {
 	// hand out cards 2 for each player. 
+	// hand 1 card to the dealer heads up (or active) and a 2nd heads down (not active)
 	// calculate the player action depending on different factors:
 		// what card the dealer has
 		// what cards the player has
@@ -107,7 +108,7 @@ Table.prototype.simulate = function (numberOfRounds) {
 		// double down
 		// pay insurance (if dealer has Ace)
 		// ... 
-	
+
 }
 
 // Card Class
