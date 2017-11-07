@@ -83,8 +83,7 @@ Dealer.prototype.addCardsToHand = function(cards, target) {
 function Player(name) {
 	this.name = name;
 	this.hand = [];
-	// TODO: Maybe add a action field. That describes what action player takes (stand, hit, ..);
-	// Or maybe it's better implemented with prototype functions
+	this.currentAction = null;
 }
 
 // Table Class
@@ -129,21 +128,18 @@ Table.prototype.simulate = function(numberOfRounds) {
 
 		// compute
 
-		this.computePlayerAction(this.dealer.hand, this.players) {
-
-		}
+		this.computePlayerAction(this.dealer.hand, this.players);
 	}
 };
 
 // this computes the action the players want to take and returns it
 // args: the current dealer and all players
-Table.prototype.computePlayerAction = function (dealerHand, players) {
+Table.prototype.computePlayerAction = function(dealerHand, players) {
 	players.forEach(function(player) {
 		var playerHand = player.hand;
 		var actionCase = this.getPlayerAction(dealerHand, playerHand);
-
-	}, this)
-}
+	}, this);
+};
 
 // this gets just the action and returns it for a single player
 // args: dealer hand and player hand
@@ -152,14 +148,14 @@ Table.prototype.getPlayerAction = function(dealerHand, playerHand) {
 	// loop through dealerHand
 	dealerHand.forEach(function(dealerCard) {
 		// if card is not hidden loop through player cards
-		if(!card.hidden) {
+		if (!dealerCard.hidden) {
 			playerHand.forEach(function(playerCard) {
 				// now we have each card and can compare it to the dealers card(s) and do something with it.
 				// TODO: Finish this beast + Tests
-			})
+			});
 		}
-	})
-}
+	});
+};
 
 // Card Class
 // args: value and color of a card :)
