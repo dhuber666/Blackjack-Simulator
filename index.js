@@ -96,7 +96,6 @@ function Table(dealer, players) {
 
 // Card Class
 // args: value and color of a card :)
-
 function Card(value, color) {
 	this.value = value;
 	this.color = color;
@@ -106,8 +105,8 @@ function Card(value, color) {
 
 //takes array and determines whether it is a royal pontoon
 //takes array [card1, card2]
-function pontoon(arr){
-	if(arr.length =< 2 && (arr[0]['value'] + arr[1]['value']) === 21) {
+Player.prototype.pontoon = function(hand) {
+	if(arr.length === 2 && (hand[0]['value'] + hand[1]['value']) === 21) {
 		return true;
 	}
 	return false;
