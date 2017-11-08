@@ -168,7 +168,7 @@ function Card(value, color) {
 
 //takes array and determines whether it is a royal pontoon
 //takes array [card1, card2]
-Player.prototype.pontoon = function(hand) {
+Table.prototype.pontoon = function(hand) {
 	if(arr.length === 2 && (hand[0]['value'] + hand[1]['value']) === 21) {
 		return true;
 	}
