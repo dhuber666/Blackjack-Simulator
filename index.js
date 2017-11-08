@@ -83,7 +83,11 @@ Dealer.prototype.addCardsToHand = function(cards, target) {
 function Player(name) {
 	this.name = name;
 	this.hand = [];
-	this.currentAction = null;
+	this.action = null;
+	this.looses = 0;
+	this.wins = 0;
+	this.ties = 0;
+	this.totalValue = 0;
 }
 
 // Table Class
@@ -137,24 +141,79 @@ Table.prototype.simulate = function(numberOfRounds) {
 Table.prototype.computePlayerAction = function(dealerHand, players) {
 	players.forEach(function(player) {
 		var playerHand = player.hand;
-		var actionCase = this.getPlayerAction(dealerHand, playerHand);
+		var playerValue = this.getPlayerTotalValue(player);
+		var action = this.getPlayerAction(dealerHand, playerHand, playerValue, player);
 	}, this);
 };
 
 // this gets just the action and returns it for a single player
 // args: dealer hand and player hand
 
-Table.prototype.getPlayerAction = function(dealerHand, playerHand) {
+Table.prototype.getPlayerAction = function(
+	dealerHand,
+	playerHand,
+	totalCardValue,
+	player
+) {
 	// loop through dealerHand
-	dealerHand.forEach(function(dealerCard) {
-		// if card is not hidden loop through player cards
-		if (!dealerCard.hidden) {
-			playerHand.forEach(function(playerCard) {
-				// now we have each card and can compare it to the dealers card(s) and do something with it.
-				// TODO: Finish this beast + Tests
-			});
-		}
-	});
+	// dealerHand.forEach(function(dealerCard) {
+	// if card is not hidden loop through player cards
+	// 	if (!dealerCard.hidden) {
+	// 		playerHand.forEach(function(playerCard) {
+	// 			// now we have each card and can compare it to the dealers card(s) and do something with it.
+	// 			// case 1: player takes card , score 17 or more? stand. Score over 21? loose. Score under 17, take card
+	// 			if(totalCardValue < 17) {
+	// 				player.hand.push(this.dealer.addCardsToHand(1)); // TODO: own "hit" function?
+	// 			}
+	// 		});
+	// 	}
+	// }, this); <<== this whole code gets activated later when we have more advanced checking conditions
+	//	 <<== for now I just want to make the app work at minimium
+
+	if (totalCardValue < 17) {
+		this.hit(player);
+		return player.action;
+	} else if (totalCardValue >= 17 && totalCardValue <= 21) {
+		this.stand(player);
+		return player.action;
+	} else if (totalCardValue > 21) {
+		this.loose(player);
+		return player.action;
+	} else {
+		console.log('Hi from total value', totalCardValue);
+	}
+};
+
+// just adds 1 card to current player and set action to hit
+Table.prototype.hit = function(player) {
+	var cards = this.dealer.dealCards(1);
+	this.dealer.addCardsToHand(cards, player);
+
+	player.action = 'hit';
+};
+
+// just adds 1 card to current player and set action to stand
+Table.prototype.stand = function(player) {
+	player.action = 'stand';
+};
+
+// just adds 1 card to current player and set action to stand
+Table.prototype.loose = function(player) {
+	player.action = 'loose';
+	player.looses++;
+};
+
+Table.prototype.getPlayerTotalValue = function(player) {
+	// loop through cards and add values. Return it
+
+	var value = 0;
+	player.hand.forEach(function(card) {
+		value += card.value;
+	}, this);
+
+	player.totalValue = value;
+
+	return value;
 };
 
 // Card Class
