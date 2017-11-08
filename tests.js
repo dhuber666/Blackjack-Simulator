@@ -113,10 +113,16 @@ describe('Player', function() {
 	});
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	it('should have a function to add cards to the hand array', function(){
 =======
 	it('should have a function to add cards to the hand array', function() {
 >>>>>>> dca56f295a5da56d2c4c7bb0e2146fce544c5c54
+=======
+
+	it('should have a function to add cards to the hand array', function() {
+
+>>>>>>> 93c2a8feb1fb85027536275e1b8e5a08fbee23a2
 		deck = new Deck();
 		dealer = new Dealer(deck);
 		var dealedCards = dealer.dealCards(2);
@@ -124,9 +130,13 @@ describe('Player', function() {
 		expect(player.hand.length).toBe(2);
 	});
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 >>>>>>> dca56f295a5da56d2c4c7bb0e2146fce544c5c54
+=======
+
+>>>>>>> 93c2a8feb1fb85027536275e1b8e5a08fbee23a2
 });
 
 // this is the "main object" - a table has a dealer and n players
