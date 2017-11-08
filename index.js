@@ -296,10 +296,18 @@ Table.prototype.resetDealer = function(dealer) {
 
 // Card Class
 // args: value and color of a card :)
-
 function Card(value, color) {
 	this.value = value;
 	this.color = color;
 	// card is hidden default
 	this.hidden = false;
+}
+
+//takes array and determines whether it is a royal pontoon
+//takes array [card1, card2]
+Table.prototype.pontoon = function(hand) {
+	if(arr.length === 2 && (hand[0]['value'] + hand[1]['value']) === 21) {
+		return true;
+	}
+	return false;
 }
