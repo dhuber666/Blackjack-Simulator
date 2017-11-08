@@ -231,16 +231,3 @@ describe('Table', function() {
 		});
 	});
 });
-
-describe('twoCardHand', function(){
-	var hand;
-	var deck;
-
-	beforeEach(function() {
-		deck = new Deck();
-		hand = [deck[0], deck[1]];
-	});
-	it('should have an array with two random cards', function() {
-		expect(twoCardHand.hand.length).toBe(2);
-	})
-});
