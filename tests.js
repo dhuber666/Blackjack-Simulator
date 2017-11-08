@@ -175,8 +175,6 @@ describe('Table', function() {
 
 			expect(table.dealer.hand[0]).toBeTruthy();
 			expect(table.dealer.hand[1]).toBeTruthy();
-
-			expect(table.dealer.hand[2]).toBeFalsy();
 		});
 
 		it('should give 6 cards to the dealer when simulated 3 times', function() {
@@ -184,8 +182,6 @@ describe('Table', function() {
 
 			expect(table.dealer.hand[0]).toBeTruthy();
 			expect(table.dealer.hand[5]).toBeTruthy();
-
-			expect(table.dealer.hand[6]).toBeFalsy();
 		});
 
 		it('should have the dealers 2nd card hidden and the first shown', function() {
@@ -194,7 +190,7 @@ describe('Table', function() {
 			expect(table.dealer.hand[0].hidden).toBeFalsy();
 			expect(table.dealer.hand[1].hidden).toBeTruthy();
 		});
-
+		// player tests
 		it('should get the players current total value', function() {
 			table.simulate(1);
 
@@ -206,20 +202,52 @@ describe('Table', function() {
 			var player = table.players[0];
 
 			if (player.totalValue < 17) {
-				table.hit(table.players[0]);
 				expect(table.players[0].action).toBe('hit');
 				console.log(table.players[0].action, player.totalValue);
 			} else if (player.totalValue >= 17 && player.totalValue <= 21) {
-				table.stand(table.players[0]);
 				expect(table.players[0].action).toBe('stand');
 				console.log(table.players[0].action, player.totalValue);
 			} else if (player.totalValue > 21) {
-				debugger;
-				table.loose(table.players[0]);
+				// debugger;
+
 				expect(table.players[0].looses).toBe(1);
-				console.log('please check me out', table.players[0]);
-			} else {
+				console.log(table.players[0].action, player.looses);
 			}
+		});
+
+		// Dealer tests
+		fit('should get the dealers action depending on what value his first card is', function() {
+			var players = [
+				new Player('dominik'),
+				new Player('magda'),
+				new Player('frodo')
+			];
+			var deck = new Deck();
+			var dealer = new Dealer(deck);
+			var newTable = new Table(dealer, players);
+			newTable.simulate(10); // type in how often you want to simulate.
+
+			console.log('Player 1 has won how often: ', newTable.players[0].wins);
+			console.log('Player 1 has lost how often: ', newTable.players[0].looses);
+			console.log('Player 1 has tied how often: ', newTable.players[0].ties);
+			// this should be equal to whats passed into simulate. So 1000 in this case
+			console.log(
+				'Sum of all calculated together is: ',
+				newTable.players[0].wins +
+					newTable.players[0].looses +
+					newTable.players[0].ties
+			); // TODO: Fixme . it's not 1000
+
+			// if more then one player:
+			console.log('Player 2 has won how often: ', newTable.players[1].wins);
+			console.log('Player 2 has lost how often: ', newTable.players[1].looses);
+			console.log('Player 2 has tied how often: ', newTable.players[1].ties);
+
+			console.log('Player 3 has won how often: ', newTable.players[2].wins);
+			console.log('Player 3 has lost how often: ', newTable.players[2].looses);
+			console.log('Player 3 has tied how often: ', newTable.players[2].ties);
+
+			console.log('Remaining cards: ', newTable.dealer.deck.cards.length);
 		});
 	});
 });
