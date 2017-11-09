@@ -120,10 +120,11 @@ Table.prototype.simulate = function(numberOfRounds) {
 	// double down
 	// pay insurance (if dealer has Ace)
 	// ...
-
+	var loopCount = 0;
 	//run simulation 'numberOfRounds'.times
 	for (var i = 0; i < numberOfRounds; i++) {
 		//give every player 2 cards to their hand
+		
 		this.players.forEach(function(player) {
 			var cards = this.dealer.dealCards(2);
 
@@ -138,19 +139,23 @@ Table.prototype.simulate = function(numberOfRounds) {
 		// compute
 
 		this.computePlayerAction(this.dealer.hand, this.players);
-		this.computeDealerAction(this.dealer, this.players);
+		loopCount += this.computeDealerAction(this.dealer, this.players);
 		this.resetPlayers(this.players);
 		this.resetDealer(this.dealer);
 	}
+
+	return loopCount;
 };
 
 // this computes the action the players want to take and returns it
 // args: the current dealer and all players
 Table.prototype.computePlayerAction = function(dealerHand, players) {
+	
 	players.forEach(function(player) {
 		// initital action is hit to keep trigger the loop
 		var action;
-
+		
+		
 		do {
 			var playerHand = player.hand;
 			var playerValue = this.getPlayerTotalValue(player);
@@ -158,21 +163,28 @@ Table.prototype.computePlayerAction = function(dealerHand, players) {
 			action = this.getPlayerAction(dealerHand, playerHand, playerValue, player);
 		} while (action === 'hit'); // TODO: Why is this an infinite loop.
 	}, this);
+	
 };
 
 Table.prototype.computeDealerAction = function(dealer, players) {
+	
+	
 	var dealerValue = this.getDealerTotalValue(dealer);
 	while (dealerValue < 17) {
 		dealer.drawCard();
 		dealerValue = this.getDealerTotalValue(dealer);
 	}
 
+	var loopCount = 0;
+
 	// compute who has won or not
 	if (!(dealerValue > 21)) {
 		// if this case all players who have not alredy lost wins
-
+		
+		loopCount++;
 		// loop through all players that doesn't have lost and check who has won
 		players.forEach(function(player) {
+			
 			if (player.action !== 'loose') {
 				if (player.totalValue > dealer.totalValue) {
 					player.action = 'won';
@@ -182,11 +194,12 @@ Table.prototype.computeDealerAction = function(dealer, players) {
 					player.ties++;
 				} else {
 					player.action = 'loose';
-					player.loose++;
+					player.looses++;
 				}
 			}
 		});
 	} else {
+		loopCount++;
 		players.forEach(function(player) {
 			if (player.action !== 'loose') {
 				player.action = 'won';
@@ -194,6 +207,8 @@ Table.prototype.computeDealerAction = function(dealer, players) {
 			}
 		});
 	}
+
+	return loopCount;
 };
 
 // this gets just the action and returns it for a single player
@@ -227,6 +242,7 @@ Table.prototype.getPlayerAction = function(
 		this.stand(player);
 		return player.action;
 	} else if (totalCardValue > 21) {
+
 		this.loose(player);
 		return player.action;
 	} else {
@@ -251,6 +267,7 @@ Table.prototype.stand = function(player) {
 Table.prototype.loose = function(player) {
 	player.action = 'loose';
 	player.looses++;
+	
 };
 
 Table.prototype.getPlayerTotalValue = function(player) {
@@ -286,7 +303,7 @@ Table.prototype.resetPlayers = function(players) {
 
 Table.prototype.resetDealer = function(dealer) {
 	// if deck is running out of cards crate a new deck with shuffle
-	if (dealer.deck.cards.length < 35) {
+	if (dealer.deck.cards.length < 60) {
 		dealer.deck.initialize();
 		dealer.deck.shuffle();
 	}
