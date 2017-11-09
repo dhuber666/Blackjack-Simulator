@@ -225,10 +225,15 @@ describe('Table', function() {
 			var deck = new Deck();
 			var dealer = new Dealer(deck);
 			var newTable = new Table(dealer, players);
-			var loopCount = newTable.simulate(1000); // type in how often you want to simulate.
-			console.log(loopCount);
 
-			expect(newTable.players[0].wins + newTable.players[0].looses + newTable.players[0].ties).toBe(1000);
+			var NUMBER_OF_GAMES = 1000;
+			newTable.simulate(NUMBER_OF_GAMES); // type in how often you want to simulate.
+
+			expect(
+				newTable.players[0].wins +
+					newTable.players[0].looses +
+					newTable.players[0].ties
+			).toBe(NUMBER_OF_GAMES);
 
 			// expect(loopCount).toBe(10);
 			console.log('Player 1 has won how often: ', newTable.players[0].wins);
