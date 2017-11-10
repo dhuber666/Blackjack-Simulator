@@ -223,18 +223,28 @@ Table.prototype.getPlayerAction = function(
 	// }, this); <<== this whole code gets activated later when we have more advanced checking conditions
 	//	 <<== for now I just want to make the app work at minimium
 
+	// player has blackjack and dealer not case
+	if (this.pontoon(playerHand) && !this.pontoon(dealerHand)) {
+		this.win(player);
+		player.blackjack = true;
+		return player.action;
+	}
+
 	if (totalCardValue < 17) {
 		this.hit(player);
 		return player.action;
-	} else if (totalCardValue >= 17 && totalCardValue <= 21) {
+	} else if (totalCardValue >= 17 && totalCardValue < 21) {
 		this.stand(player);
 		return player.action;
 	} else if (totalCardValue > 21) {
 		this.loose(player);
 		return player.action;
-	} else {
-		console.log('Hi from total value', totalCardValue);
 	}
+};
+
+Table.prototype.win = function(player) {
+	player.action = 'win';
+	player.wins++;
 };
 
 // just adds 1 card to current player and set action to hit
@@ -320,8 +330,19 @@ function Card(value, color) {
 //takes array and determines whether it is a royal pontoon
 //takes array [card1, card2]
 Table.prototype.pontoon = function(hand) {
-	if (arr.length === 2 && hand[0]['value'] + hand[1]['value'] === 21) {
+	if (hand.length === 2 && hand[0]['value'] + hand[1]['value'] === 21) {
 		return true;
 	}
 	return false;
+};
+
+// function for  testing
+// args: value eg. [10, 11], target eg. dealer or player
+Table.prototype.customHand = function(values, target) {
+	var cards = [];
+	target.hand = [];
+	values.forEach(function(value) {
+		card = new Card(value, 'spades');
+		target.hand.push(card);
+	});
 };

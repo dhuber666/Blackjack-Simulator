@@ -216,7 +216,7 @@ describe('Table', function() {
 		});
 
 		// Dealer tests
-		fit('should get the dealers action depending on what value his first card is', function() {
+		it('should get the dealers action depending on what value his first card is', function() {
 			var players = [
 				new Player('dominik'),
 				new Player('magda'),
@@ -257,6 +257,46 @@ describe('Table', function() {
 			console.log('Player 3 has tied how often: ', newTable.players[2].ties);
 
 			console.log('Remaining cards: ', newTable.dealer.deck.cards.length);
+		});
+
+		describe('Different conditions if the player wins or not', function() {
+			var players;
+			var deck;
+			var dealer;
+			var table;
+
+			beforeEach(function() {
+				players = [new Player('dominik')];
+				deck = new Deck();
+				dealer = new Dealer(deck);
+				table = new Table(dealer, players);
+			});
+
+			it('should increment players wins if the player has backjack and dealer has not', function() {
+				// set up custom player hand
+				var playerValues = [10, 11];
+				var player = table.players[0];
+				table.customHand(playerValues, player);
+
+				// set up custom dealer hand
+				var dealerValues = [2, 3];
+				var dealer = table.dealer;
+				table.customHand(dealerValues, dealer);
+
+				// first check
+				table.computePlayerAction(table.dealer.hand, players);
+				expect(table.players[0].blackjack).toBe(true);
+
+				// second try where dealer also has a blackjack
+				player.blackjack = false;
+				var dealerValues = [10, 11];
+				var dealer = table.dealer;
+				table.customHand(dealerValues, dealer);
+
+				table.computePlayerAction(table.dealer.hand, players);
+
+				expect(table.players[0].blackjack).toBe(false);
+			});
 		});
 	});
 });
