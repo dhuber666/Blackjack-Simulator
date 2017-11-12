@@ -216,12 +216,8 @@ describe('Table', function() {
 		});
 
 		// Dealer tests
-		it('should get the dealers action depending on what value his first card is', function() {
-			var players = [
-				new Player('dominik'),
-				new Player('magda'),
-				new Player('frodo')
-			];
+		fit('should get the dealers action depending on what value his first card is', function() {
+			var players = [new Player('dominik')];
 			var deck = new Deck();
 			var dealer = new Dealer(deck);
 			var newTable = new Table(dealer, players);
@@ -239,6 +235,9 @@ describe('Table', function() {
 			console.log('Player 1 has won how often: ', newTable.players[0].wins);
 			console.log('Player 1 has lost how often: ', newTable.players[0].looses);
 			console.log('Player 1 has tied how often: ', newTable.players[0].ties);
+			console.log('Cards of player: ', newTable.players[0].hand);
+			console.log('Cards of dealer: ', newTable.dealer.hand);
+			console.log('Blackjack count: ', newTable.players[0].blackjackCount);
 			// this should be equal to whats passed into simulate. So 1000 in this case
 			console.log(
 				'Sum of all calculated together is: ',
@@ -248,15 +247,15 @@ describe('Table', function() {
 			); // TODO: Fixme . it's not 1000
 
 			// if more then one player:
-			console.log('Player 2 has won how often: ', newTable.players[1].wins);
-			console.log('Player 2 has lost how often: ', newTable.players[1].looses);
-			console.log('Player 2 has tied how often: ', newTable.players[1].ties);
+			// console.log('Player 2 has won how often: ', newTable.players[1].wins);
+			// console.log('Player 2 has lost how often: ', newTable.players[1].looses);
+			// console.log('Player 2 has tied how often: ', newTable.players[1].ties);
 
-			console.log('Player 3 has won how often: ', newTable.players[2].wins);
-			console.log('Player 3 has lost how often: ', newTable.players[2].looses);
-			console.log('Player 3 has tied how often: ', newTable.players[2].ties);
+			// console.log('Player 3 has won how often: ', newTable.players[2].wins);
+			// console.log('Player 3 has lost how often: ', newTable.players[2].looses);
+			// console.log('Player 3 has tied how often: ', newTable.players[2].ties);
 
-			console.log('Remaining cards: ', newTable.dealer.deck.cards.length);
+			// console.log('Remaining cards: ', newTable.dealer.deck.cards.length);
 		});
 
 		describe('Different conditions if the player wins or not', function() {
@@ -296,6 +295,33 @@ describe('Table', function() {
 				table.computePlayerAction(table.dealer.hand, players);
 
 				expect(table.players[0].blackjack).toBe(false);
+			});
+
+			it('should run n times and wins, ties, losses summed up should equal to n', function() {
+				var playerValues = [10, 10];
+				var player = table.players[0];
+				table.customHand(playerValues, player);
+
+				var dealerValues = [10, 6];
+				var dealer = table.dealer;
+				table.customHand(dealerValues, dealer);
+
+				table.computePlayerAction(table.dealer.hand, players);
+				table.computeDealerAction(table.dealer, players);
+
+				console.log(
+					'Sum of all calculated together is: ',
+					table.players[0].wins +
+						table.players[0].looses +
+						table.players[0].ties
+				);
+
+				console.log('Player 1 has won how often: ', table.players[0].wins);
+				console.log('Player 1 has lost how often: ', table.players[0].looses);
+				console.log('Player 1 has tied how often: ', table.players[0].ties);
+				console.log('Cards of player: ', table.players[0].hand);
+				console.log('Cards of dealer: ', table.dealer.hand);
+				console.log('Blackjack count: ', table.players[0].blackjackCount);
 			});
 		});
 	});

@@ -93,6 +93,8 @@ function Player(name) {
 	this.wins = 0;
 	this.ties = 0;
 	this.totalValue = 0;
+	this.blackjack = false;
+	this.blackjackCount = 0;
 }
 
 // Table Class
@@ -176,9 +178,19 @@ Table.prototype.computeDealerAction = function(dealer, players) {
 
 		// loop through all players that doesn't have lost and check who has won
 		players.forEach(function(player) {
-			if (player.action !== 'loose') {
+			if (
+				player.action !== 'loose' &&
+				player.action !== 'win' &&
+				player.action !== 'tie'
+			) {
+				if (this.pontoon(this.dealer.hand)) {
+					player.action = 'loose';
+					player.looses++;
+					return;
+				}
+
 				if (player.totalValue > dealer.totalValue) {
-					player.action = 'won';
+					player.action = 'win';
 					player.wins++;
 				} else if (player.totalValue === dealer.totalValue) {
 					player.action = 'tie';
@@ -188,11 +200,15 @@ Table.prototype.computeDealerAction = function(dealer, players) {
 					player.looses++;
 				}
 			}
-		});
+		}, this);
 	} else {
 		players.forEach(function(player) {
-			if (player.action !== 'loose') {
-				player.action = 'won';
+			if (
+				player.action !== 'loose' &&
+				player.action !== 'win' &&
+				player.action !== 'tie'
+			) {
+				player.action = 'win';
 				player.wins++;
 			}
 		});
@@ -224,9 +240,18 @@ Table.prototype.getPlayerAction = function(
 	//	 <<== for now I just want to make the app work at minimium
 
 	// player has blackjack and dealer not case
+
 	if (this.pontoon(playerHand) && !this.pontoon(dealerHand)) {
 		this.win(player);
 		player.blackjack = true;
+		player.blackjackCount++;
+		return player.action;
+	}
+
+	if (this.pontoon(playerHand) && this.pontoon(dealerHand)) {
+		this.tie(player);
+		player.blackjack = true;
+		player.blackjackCount++;
 		return player.action;
 	}
 
@@ -245,6 +270,11 @@ Table.prototype.getPlayerAction = function(
 Table.prototype.win = function(player) {
 	player.action = 'win';
 	player.wins++;
+};
+
+Table.prototype.tie = function(player) {
+	player.action = 'tie';
+	player.ties++;
 };
 
 // just adds 1 card to current player and set action to hit
@@ -304,6 +334,7 @@ Table.prototype.resetPlayers = function(players) {
 		player.hand = [];
 		player.action = null;
 		player.totalValue = 0;
+		player.blackjack = false;
 	});
 };
 
