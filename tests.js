@@ -227,6 +227,7 @@ describe('Table', function() {
 			var newTable = new Table(dealer, players);
 
 			var NUMBER_OF_GAMES = 1000;
+
 			newTable.simulate(NUMBER_OF_GAMES); // type in how often you want to simulate.
 
 			expect(
@@ -301,31 +302,126 @@ describe('Table', function() {
 				expect(table.players[0].blackjack).toBe(true);
 			});
 
-			it('should run n times and wins, ties, losses summed up should equal to n', function() {
-				var playerValues = [10, 10];
-				var player = table.players[0];
-				table.customHand(playerValues, player);
+			describe('Stand Tests - Player should just stand in here', function() {
+				it('should run stand when the player has 16 - 12, A8 - A10, 10 10 and the dealer has something between 2 - 6 as up card ', function() {
+					var playerValues = [10, 2];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
 
-				var dealerValues = [10, 6];
-				var dealer = table.dealer;
-				table.customHand(dealerValues, dealer);
+					var dealerValues = [4, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
 
-				table.computePlayerAction(table.dealer.hand, players);
-				table.computeDealerAction(table.dealer, players);
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('stand');
+				});
+				it('should run stand when the player has A 9 and the dealer has any card as up card', function() {
+					var playerValues = [11, 9];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
 
-				console.log(
-					'Sum of all calculated together is: ',
-					table.players[0].wins +
-						table.players[0].looses +
-						table.players[0].ties
-				);
+					var dealerValues = [4, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
 
-				console.log('Player 1 has won how often: ', table.players[0].wins);
-				console.log('Player 1 has lost how often: ', table.players[0].looses);
-				console.log('Player 1 has tied how often: ', table.players[0].ties);
-				console.log('Cards of player: ', table.players[0].hand);
-				console.log('Cards of dealer: ', table.dealer.hand);
-				console.log('Blackjack count: ', table.players[0].blackjackCount);
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('stand');
+				});
+
+				it('should run stand when the player has A 8 and the dealer has any card as up card expect when he has 6', function() {
+					var playerValues = [11, 8];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [5, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('stand');
+				});
+
+				it('should run stand when the player has A 7 and the dealer has any card as up card expect when he has 3 to 6 and 9 to 10', function() {
+					var playerValues = [11, 7];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [2, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('stand');
+				});
+
+				it('should run stand when the player has 10 10 and the dealer has any card', function() {
+					var playerValues = [10, 10];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [2, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('stand');
+				});
+
+				it('should run stand when the player has 9 9 and the dealer has 7, 10 or 11', function() {
+					var playerValues = [9, 9];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [7, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('stand');
+				});
+				it('should run stand when the player has 7 7 and the dealer has 10', function() {
+					var playerValues = [7, 7];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [10, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('stand');
+				});
+			});
+
+			describe('Hit Tests - Player should Hit in here', function() {
+				fit('should run Hit when player has total of 13 - 17+ and dealer has 7 - 11', function() {
+					var playerValues = [7, 6];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [10, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
 			});
 		});
 	});

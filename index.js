@@ -150,9 +150,9 @@ Table.prototype.simulate = function(numberOfRounds) {
 // this computes the action the players want to take and returns it
 // args: the current dealer and all players
 Table.prototype.computePlayerAction = function(dealerHand, players) {
+	var action;
 	players.forEach(function(player) {
 		// initital action is hit to keep trigger the loop
-		var action;
 
 		do {
 			var playerHand = player.hand;
@@ -161,6 +161,8 @@ Table.prototype.computePlayerAction = function(dealerHand, players) {
 			action = this.getPlayerAction(dealerHand, playerHand, playerValue, player);
 		} while (action === 'hit'); // TODO: Why is this an infinite loop.
 	}, this);
+
+	return action;
 };
 
 // args: dealer object and array of player objects
@@ -255,16 +257,22 @@ Table.prototype.getPlayerAction = function(
 		return player.action;
 	}
 
-	if (totalCardValue < 17) {
-		this.hit(player);
-		return player.action;
-	} else if (totalCardValue >= 17 && totalCardValue < 21) {
-		this.stand(player);
-		return player.action;
-	} else if (totalCardValue > 21) {
-		this.loose(player);
-		return player.action;
-	}
+	// here comes the detailed part: Switch Case
+
+	var action = this.edgeCase(player, this.dealer);
+
+	// if (totalCardValue < 17) {
+	// 	this.hit(player);
+	// 	return player.action;
+	// } else if (totalCardValue >= 17 && totalCardValue < 21) {
+	// 	this.stand(player);
+	// 	return player.action;
+	// } else if (totalCardValue > 21) {
+	// 	this.loose(player);
+	// 	return player.action;
+	// }
+
+	return action;
 };
 
 Table.prototype.win = function(player) {
@@ -365,6 +373,123 @@ Table.prototype.pontoon = function(hand) {
 		return true;
 	}
 	return false;
+};
+
+Table.prototype.edgeCase = function(player, dealer) {
+	var playerTotalValue = this.getPlayerTotalValue(player);
+	var playerHand = player.hand;
+	var dealerUpCard = dealer.hand[0].value;
+	var playerHasAce = this.hasAce(player.hand);
+	var playerHasDouble = this.isDouble(player.hand);
+	// debugger;
+	switch (true) {
+		/* ====== cases when player should stand =======*/
+
+		/* "default cases" */
+		case dealerUpCard > 1 &&
+			dealerUpCard < 7 &&
+			!playerHasDouble &&
+			playerTotalValue > 12 &&
+			!playerHasAce:
+			this.stand(player);
+			return player.action;
+			break;
+		case dealerUpCard > 3 &&
+			!playerHasDouble &&
+			dealerUpCard < 7 &&
+			playerTotalValue === 12 &&
+			!playerHasAce:
+			this.stand(player);
+			return player.action;
+			break;
+
+		/* When the player has 17 in total or greater but under 22, also no aces or double cards like 10 10 */
+		case playerTotalValue >= 17 &&
+			playerTotalValue <= 21 &&
+			!playerHasAce &&
+			!playerHasDouble:
+			this.stand(player);
+			return player.action;
+			break;
+
+		/* cases when hand has an ace */
+
+		case playerTotalValue === 20 && hasAce:
+			this.stand(player);
+			return player.action;
+			break;
+		case playerTotalValue === 19 && dealerUpCard !== 6 && hasAce:
+			this.stand(player);
+			return player.action;
+			break;
+
+		case playerHand.length === 2 &&
+			playerTotalValue === 18 &&
+			hasAce &&
+			(dealerUpCard < 3 || dealerUpCard > 6) &&
+			(dealerUpCard !== 10 && dealerUpCard !== 9):
+			this.stand(player);
+			return player.action;
+			break;
+
+		/* cases when hand has double values e.g. 9 9 , 10 10 */
+		case playerHand.length === 2 && playerTotalValue === 20 && playerHasDouble:
+			this.stand(player);
+			return player.action;
+			break;
+		case playerHand.length === 2 &&
+			playerTotalValue === 18 &&
+			playerHasDouble &&
+			(dealerUpCard === 7 || dealerUpCard === 10 || dealerUpCard === 11):
+			this.stand(player);
+			return player.action;
+			break;
+		case playerHand.length === 2 &&
+			playerTotalValue === 14 &&
+			playerHasDouble &&
+			dealerUpCard === 10:
+			this.stand(player);
+			return player.action;
+			break;
+
+		/* ====== cases when player should hit =======*/
+
+		case playerTotalValue > 12 &&
+			playerTotalValue < 17 &&
+			dealerUpCard > 6 &&
+			!playerHasAce:
+			this.hit(player);
+			return player.action;
+			break;
+
+		default:
+			// for testing: Set action to loose so loop stops
+			player.action = 'loose';
+			return player.action;
+			console.log('you landed in default case');
+			break;
+	}
+};
+
+Table.prototype.hasAce = function(hand) {
+	(hasAce = false),
+		hand.forEach(function(card) {
+			if (card.value === 11) hasAce = true;
+		});
+	return hasAce;
+};
+
+Table.prototype.isDouble = function(hand) {
+	isDouble = false;
+	var previousValue;
+	if (hand.length > 2) {
+		return isDouble;
+	} else {
+		if (hand[0].value === hand[1].value) {
+			isDouble = true;
+		}
+	}
+	return isDouble;
 };
 
 // function for  testing
