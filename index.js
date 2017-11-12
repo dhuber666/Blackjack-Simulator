@@ -159,7 +159,7 @@ Table.prototype.computePlayerAction = function(dealerHand, players) {
 			var playerValue = this.getPlayerTotalValue(player);
 
 			action = this.getPlayerAction(dealerHand, playerHand, playerValue, player);
-		} while (action === 'hit'); // TODO: Why is this an infinite loop.
+		} while (action === 'hit' && /* this is for testing =>> */ !player.tested);
 	}, this);
 
 	return action;
@@ -381,7 +381,7 @@ Table.prototype.edgeCase = function(player, dealer) {
 	var dealerUpCard = dealer.hand[0].value;
 	var playerHasAce = this.hasAce(player.hand);
 	var playerHasDouble = this.isDouble(player.hand);
-	// debugger;
+
 	switch (true) {
 		/* ====== cases when player should stand =======*/
 
@@ -457,8 +457,52 @@ Table.prototype.edgeCase = function(player, dealer) {
 		case playerTotalValue > 12 &&
 			playerTotalValue < 17 &&
 			dealerUpCard > 6 &&
+			!playerHasDouble &&
 			!playerHasAce:
 			this.hit(player);
+			/* this is just for testing */ player.tested = true;
+			return player.action;
+			break;
+
+		case playerTotalValue === 12 &&
+			dealerUpCard > 6 &&
+			(dealerUpCard < 4 && !playerHasAce && !playerHasDouble):
+			this.hit(player);
+			/* this is just for testing */ player.tested = true;
+			return player.action;
+			break;
+
+		case playerTotalValue === 10 &&
+			dealerUpCard > 9 &&
+			!playerHasAce &&
+			!playerHasDouble:
+			this.hit(player);
+			/* this is just for testing */ player.tested = true;
+			return player.action;
+			break;
+
+		case playerTotalValue === 9 &&
+			dealerUpCard > 6 &&
+			!playerHasAce &&
+			!playerHasDouble:
+			this.hit(player);
+			/* this is just for testing */ player.tested = true;
+			return player.action;
+			break;
+
+		case (playerTotalValue === 8 && dealerUpCard > 6) ||
+			(dealerUpCard < 5 && !playerHasAce && !playerHasDouble):
+			this.hit(player);
+			/* this is just for testing */ player.tested = true;
+			return player.action;
+			break;
+
+		case playerTotalValue > 4 &&
+			playerTotalValue < 8 &&
+			!playerHasAce &&
+			!playerHasDouble:
+			this.hit(player);
+			/* this is just for testing */ player.tested = true;
 			return player.action;
 			break;
 
