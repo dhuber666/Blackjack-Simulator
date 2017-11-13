@@ -487,7 +487,7 @@ describe('Table', function() {
 					expect(action).toBe('hit');
 				});
 
-				fit('should run Hit when player has total of 5 - 7 and dealer has any card', function() {
+				it('should run Hit when player has total of 5 - 7 and dealer has any card', function() {
 					var playerValues = [3, 2];
 					var player = table.players[0];
 					table.customHand(playerValues, player);
@@ -501,6 +501,306 @@ describe('Table', function() {
 					table.computeDealerAction(table.dealer, players);
 					console.log(action);
 					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has A 7 and dealer has 9 or 10', function() {
+					var playerValues = [11, 7];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [11, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has A 6 and dealer has > 6', function() {
+					var playerValues = [11, 6];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [6, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has A 5 and dealer has < 4 and > 6', function() {
+					var playerValues = [11, 5];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [3, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has A 4 and dealer has < 4 and > 6', function() {
+					var playerValues = [11, 4];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [7, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has A 3 and dealer has < 4 and > 6', function() {
+					var playerValues = [11, 3];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [7, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has A 2 and dealer has < 4 and > 6', function() {
+					var playerValues = [11, 2];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [7, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has 7 7 and dealer has 8 || 9 || 11', function() {
+					var playerValues = [7, 7];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [8, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has 6 6 and dealer > 6', function() {
+					var playerValues = [6, 6];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [8, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has 5 5 and dealer > 9', function() {
+					var playerValues = [5, 5];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [10, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has 4 4 and dealer < 5 || > 6', function() {
+					var playerValues = [4, 4];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [3, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has 3 3 and dealer < 4 || > 7', function() {
+					var playerValues = [3, 3];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [3, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+
+				it('should run Hit when player has 2 2 and dealer 2 || > 7', function() {
+					var playerValues = [2, 2];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [2, 6];
+					var dealer = table.dealer;
+
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('hit');
+				});
+			});
+
+			describe('Split Tests - Player should Split in here', function() {
+				it('should run Split when player has 11 11 and dealer has any card', function() {
+					var playerValues = [2, 7];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [2, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('split');
+				});
+				// this should run every time and show stats
+				fit('my custom test', function() {
+					table.simulate(1000);
+					console.log('Player 1 has won how often: ', table.players[0].wins);
+					console.log('Player 1 has lost how often: ', table.players[0].looses);
+					console.log('Player 1 has tied how often: ', table.players[0].ties);
+					console.log('Cards of player: ', table.players[0].hand);
+					console.log('Cards of dealer: ', table.dealer.hand);
+					console.log('Blackjack count: ', table.players[0].blackjackCount);
+					// this should be equal to whats passed into simulate. So 1000 in this case
+					console.log(
+						'Sum of all calculated together is: ',
+						table.players[0].wins +
+							table.players[0].looses +
+							table.players[0].ties
+					);
+				});
+				it('should run Split when player has 9 9 and dealer has < 7 || 8 || 9', function() {
+					var playerValues = [9, 9];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [2, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('split');
+				});
+
+				it('should run Split when player has 7 7 and dealer has < 8 ', function() {
+					var playerValues = [7, 7];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [2, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('split');
+				});
+
+				it('should run Split when player has 6 6 and dealer has < 7 ', function() {
+					var playerValues = [6, 6];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [2, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('split');
+				});
+
+				it('should run Split when player has 3 3 and dealer has > 3 && < 8 ', function() {
+					var playerValues = [3, 3];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [4, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('split');
+				});
+
+				fit('should run Split when player has 2 2 and dealer has > 2 && < 8 ', function() {
+					var playerValues = [2, 2];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [4, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+					debugger;
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('split');
 				});
 			});
 		});
