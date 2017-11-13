@@ -20,7 +20,3 @@ For later version there could be features like options:
 * If you want to double down or not, ... 
 
 The basics of the game blackjack are in the file "notes.MD". 
-
-## The very early first version is now ready. You can test it out by going into the tests.js files an go to the last test. You can type in a number into the simulate function. It also works with 1000 tests. You see how often player has won in the console. 
-
-As the algorithm is working now the player has a chance of about 35% to 45 % per game to win when played solo vs dealer. No optimizations for the player actions yet. There is a minor bug in it. Because when it calculates it 1000 times. And you sum up how often the player has lost + won + tied it's not 1000. But it should be. 
