@@ -96,6 +96,7 @@ function Player(name) {
 	this.blackjack = false;
 	this.blackjackCount = 0;
 	this.values = [];
+	this.splitCount = 0;
 }
 
 // Table Class
@@ -211,11 +212,14 @@ Table.prototype.computeDealerAction = function(dealer, players) {
 	} else {
 		players.forEach(function(player) {
 			if (
-				(player.action !== 'loose' &&
-					player.action !== 'win' &&
-					player.action !== 'tie') ||
-				player.action === 'split'
+				player.action !== 'loose' &&
+				player.action !== 'win' &&
+				player.action !== 'tie' &&
+				!player.split
 			) {
+				player.action = 'win';
+				player.wins++;
+			} else if (player.split) {
 				player.values.forEach(function(value) {
 					player.action = 'win';
 					player.wins++;
@@ -320,9 +324,7 @@ Table.prototype.stand = function(player, valueStandsOn) {
 // just adds 1 card to current player and set action to stand
 // args player
 Table.prototype.loose = function(player) {
-	if (player.split !== true) {
-		player.action = 'loose';
-	}
+	player.action = 'loose';
 
 	player.looses++;
 };
@@ -681,7 +683,7 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 
 		default:
 			// for testing: Set action to loose so loop stops
-			player.action = 'loose';
+			this.loose(player);
 			return player.action;
 			console.log('you landed in default case');
 			break;
@@ -693,6 +695,7 @@ Table.prototype.split = function(player) {
 	// [11, 11] ==> [[11], [11]]
 
 	player.split = true;
+	player.splitCount++;
 	var playerHand = player.hand;
 	var splitHand = [[playerHand[0]], [playerHand[1]]];
 

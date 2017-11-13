@@ -725,7 +725,8 @@ describe('Table', function() {
 						'Sum of all calculated together is: ',
 						table.players[0].wins +
 							table.players[0].looses +
-							table.players[0].ties
+							table.players[0].ties -
+							table.players[0].splitCount
 					);
 				});
 				it('should run Split when player has 9 9 and dealer has < 7 || 8 || 9', function() {
@@ -796,7 +797,7 @@ describe('Table', function() {
 					var dealerValues = [4, 6];
 					var dealer = table.dealer;
 					table.customHand(dealerValues, dealer);
-					debugger;
+
 					var action = table.computePlayerAction(table.dealer.hand, players);
 					table.computeDealerAction(table.dealer, players);
 					console.log(action);
