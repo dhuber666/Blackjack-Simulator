@@ -789,12 +789,12 @@ describe('Table', function() {
 					expect(action).toBe('split');
 				});
 
-				fit('should run Split when player has 2 2 and dealer has > 2 && < 8 ', function() {
+				it('should run Split when player has 2 2 and dealer has > 2 && < 8 ', function() {
 					var playerValues = [2, 2];
 					var player = table.players[0];
 					table.customHand(playerValues, player);
 
-					var dealerValues = [4, 6];
+					var dealerValues = [3, 6];
 					var dealer = table.dealer;
 					table.customHand(dealerValues, dealer);
 
@@ -802,6 +802,98 @@ describe('Table', function() {
 					table.computeDealerAction(table.dealer, players);
 					console.log(action);
 					expect(action).toBe('split');
+				});
+			});
+
+			describe('Double Down Tests - Player should Double Down in here', function() {
+				it('should run DoubleDown when player has 11 total and dealer has any card', function() {
+					var playerValues = [6, 5];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [3, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('doubleDown');
+				});
+
+				it('should run DoubleDown when player has 10 total and dealer has < 10', function() {
+					var playerValues = [6, 4];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [3, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('doubleDown');
+				});
+
+				it('should run DoubleDown when player has 9 total and dealer has < 7', function() {
+					var playerValues = [6, 3];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [3, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('doubleDown');
+				});
+
+				it('should run DoubleDown when player has 8 total and dealer has 5 || 6', function() {
+					var playerValues = [6, 2];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [5, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('doubleDown');
+				});
+
+				it('should run DoubleDown when player has A 8 and dealer has 6', function() {
+					var playerValues = [11, 8];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [6, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('doubleDown');
+				});
+
+				fit('should run DoubleDown when player has A 7 and dealer has > 2 && < 7', function() {
+					var playerValues = [11, 7];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [6, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('doubleDown');
 				});
 			});
 		});

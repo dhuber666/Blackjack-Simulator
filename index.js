@@ -176,6 +176,7 @@ Table.prototype.computeDealerAction = function(dealer, players) {
 		dealer.drawCard();
 		dealerValue = this.getDealerTotalValue(dealer);
 	}
+	// debugger;
 
 	// compute who has won or not
 	if (!(dealerValue > 21)) {
@@ -195,18 +196,31 @@ Table.prototype.computeDealerAction = function(dealer, players) {
 				}
 				// loop through all saved values of player
 				// normally one but more then 1 when splitted (2)
-				player.values.forEach(function(value) {
-					if (value > dealer.totalValue) {
+				if (player.values) {
+					player.values.forEach(function(value) {
+						if (value > dealer.totalValue) {
+							player.action = 'win';
+							player.wins++;
+						} else if (value === dealer.totalValue) {
+							player.action = 'tie';
+							player.ties++;
+						} else {
+							player.action = 'loose';
+							player.looses++;
+						}
+					});
+				} else {
+					if (player.totalValue > dealer.totalValue) {
 						player.action = 'win';
 						player.wins++;
-					} else if (value === dealer.totalValue) {
+					} else if (player.totalValue === dealer.totalValue) {
 						player.action = 'tie';
 						player.ties++;
 					} else {
 						player.action = 'loose';
 						player.looses++;
 					}
-				});
+				}
 			}
 		}, this);
 	} else {
@@ -416,6 +430,7 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 	var dealerUpCard = dealer.hand[0].value;
 	var playerHasAce = this.hasAce(playerHand);
 	var playerHasDouble = this.isDouble(playerHand);
+	// debugger;
 
 	switch (true) {
 		/* ====== cases when player should stand =======*/
@@ -425,6 +440,7 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 			dealerUpCard < 7 &&
 			!playerHasDouble &&
 			playerTotalValue > 12 &&
+			playerTotalValue < 22 &&
 			!playerHasAce:
 			this.stand(player, playerTotalValue);
 			return player.action;
@@ -501,8 +517,9 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 			break;
 
 		case playerTotalValue === 12 &&
-			dealerUpCard > 6 &&
-			(dealerUpCard < 4 && !playerHasAce && !playerHasDouble):
+			(dealerUpCard > 6 || dealerUpCard < 4) &&
+			!playerHasAce &&
+			!playerHasDouble:
 			this.hit(playerHand, player);
 			/* this is just for testing */ player.tested = true;
 			return player.action;
@@ -526,8 +543,11 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 			return player.action;
 			break;
 
-		case (playerTotalValue === 8 && dealerUpCard > 6) ||
-			(dealerUpCard < 5 && !playerHasAce && !playerHasDouble):
+		case playerTotalValue === 8 &&
+			dealerUpCard > 6 &&
+			dealerUpCard < 5 &&
+			!playerHasAce &&
+			!playerHasDouble:
 			this.hit(playerHand, player);
 			/* this is just for testing */ player.tested = true;
 			return player.action;
@@ -681,6 +701,76 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 			return player.action;
 			break;
 
+		/* ====== cases when player should double down =======*/
+		// normal cases
+
+		case playerTotalValue === 11 &&
+			!player.double &&
+			!playerHasDouble &&
+			!playerHasAce:
+			this.double(player);
+			return player.action;
+			break;
+
+		case playerTotalValue === 10 &&
+			!player.double &&
+			!playerHasDouble &&
+			!playerHasAce &&
+			dealerUpCard < 10:
+			this.double(player);
+			return player.action;
+			break;
+
+		case playerTotalValue === 9 &&
+			!player.double &&
+			!playerHasDouble &&
+			!playerHasAce &&
+			dealerUpCard < 7:
+			this.double(player);
+			return player.action;
+			break;
+
+		case playerTotalValue === 8 &&
+			!player.double &&
+			!playerHasDouble &&
+			!playerHasAce &&
+			(dealerUpCard === 5 || dealerUpCard === 6):
+			this.double(player);
+			return player.action;
+			break;
+
+		// Ace cases
+
+		case playerTotalValue === 19 &&
+			!player.double &&
+			!playerHasDouble &&
+			playerHasAce &&
+			dealerUpCard === 6:
+			this.double(player);
+			return player.action;
+			break;
+
+		case playerTotalValue === 18 &&
+			!player.double &&
+			!playerHasDouble &&
+			playerHasAce &&
+			(dealerUpCard > 2 && dealerUpCard < 7):
+			this.double(player);
+			return player.action;
+			break;
+
+		// case when you have > 21 but an ace in hand, count it as one
+		case playerTotalValue > 21 && playerHasAce && !playerHasDouble:
+			this.handleAce(player);
+			return player.action;
+			break;
+
+		// player looses
+		case playerTotalValue > 21:
+			this.loose(player);
+			return player.action;
+			break;
+
 		default:
 			// for testing: Set action to loose so loop stops
 			this.loose(player);
@@ -688,6 +778,31 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 			console.log('you landed in default case');
 			break;
 	}
+};
+
+Table.prototype.handleAce = function(player) {
+	// loop through hand and map the ace card value to 1
+
+	player.hand.forEach(function(card) {
+		if (card.value === 11) {
+			card.value = 1;
+		}
+	});
+	player.action = 'hit';
+};
+
+Table.prototype.double = function(player) {
+	player.double = true;
+	player.doubleCount++;
+
+	// add one card to current hand
+
+	var newCard = this.dealer.dealCards(1);
+	this.dealer.addCardsToHand(newCard, player.hand);
+
+	var currentValue = this.getPlayerTotalValue(player);
+
+	this.stand(player, currentValue);
 };
 
 Table.prototype.split = function(player) {
