@@ -97,6 +97,7 @@ function Player(name) {
 	this.blackjackCount = 0;
 	this.values = [];
 	this.splitCount = 0;
+	this.double = false;
 }
 
 // Table Class
@@ -392,13 +393,14 @@ Table.prototype.resetPlayers = function(players) {
 		player.blackjack = false;
 		player.values = [];
 		player.split = false;
+		player.double = false;
 	});
 };
 
 // args: dealer object
 Table.prototype.resetDealer = function(dealer) {
 	// if deck is running out of cards crate a new deck with shuffle
-	if (dealer.deck.cards.length < 60) {
+	if (dealer.deck.cards.length <= 60) {
 		dealer.deck.initialize();
 		dealer.deck.shuffle();
 	}
@@ -745,7 +747,8 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 			!player.double &&
 			!playerHasDouble &&
 			playerHasAce &&
-			dealerUpCard === 6:
+			dealerUpCard === 6 &&
+			playerHand.length === 2:
 			this.double(player);
 			return player.action;
 			break;
@@ -754,7 +757,50 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 			!player.double &&
 			!playerHasDouble &&
 			playerHasAce &&
-			(dealerUpCard > 2 && dealerUpCard < 7):
+			(dealerUpCard > 2 && dealerUpCard < 7) &&
+			playerHand.length === 2:
+			this.double(player);
+			return player.action;
+			break;
+
+		case playerTotalValue === 17 &&
+			!player.double &&
+			!playerHasDouble &&
+			playerHasAce &&
+			dealerUpCard < 7 &&
+			playerHand.length === 2:
+			this.double(player);
+			return player.action;
+			break;
+
+		case (playerTotalValue === 16 ||
+			playerTotalValue === 15 ||
+			playerTotalValue === 14 ||
+			playerTotalValue === 13) &&
+			!player.double &&
+			!playerHasDouble &&
+			playerHasAce &&
+			(dealerUpCard < 7 && dealerUpCard > 3) &&
+			playerHand.length === 2:
+			this.double(player);
+			return player.action;
+			break;
+
+		// Double card cases 5 5, 6 6
+		case playerTotalValue === 10 &&
+			!player.double &&
+			playerHasDouble &&
+			!playerHasAce &&
+			dealerUpCard < 10:
+			this.double(player);
+			return player.action;
+			break;
+
+		case playerTotalValue === 8 &&
+			!player.double &&
+			playerHasDouble &&
+			!playerHasAce &&
+			(dealerUpCard === 5 || dealerUpCard === 6):
 			this.double(player);
 			return player.action;
 			break;
