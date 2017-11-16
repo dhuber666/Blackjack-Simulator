@@ -712,7 +712,7 @@ describe('Table', function() {
 					expect(action).toBe('split');
 				});
 				// this should run every time and show stats
-				fit('my custom test', function() {
+				it('my custom test', function() {
 					table.simulate(1000);
 					console.log('Player 1 has won how often: ', table.players[0].wins);
 					console.log('Player 1 has lost how often: ', table.players[0].looses);
@@ -947,6 +947,24 @@ describe('Table', function() {
 					table.customHand(playerValues, player);
 
 					var dealerValues = [6, 6];
+					var dealer = table.dealer;
+					table.customHand(dealerValues, dealer);
+
+					var action = table.computePlayerAction(table.dealer.hand, players);
+					table.computeDealerAction(table.dealer, players);
+					console.log(action);
+					expect(action).toBe('doubleDown');
+				});
+
+				// Custom tests
+
+				// 11 11 as hand from player and 4 as up card from dealer
+				fit('is a very custom test', function() {
+					var playerValues = [7, 11];
+					var player = table.players[0];
+					table.customHand(playerValues, player);
+
+					var dealerValues = [4, 6];
 					var dealer = table.dealer;
 					table.customHand(dealerValues, dealer);
 

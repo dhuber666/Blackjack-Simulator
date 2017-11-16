@@ -154,15 +154,20 @@ Table.prototype.simulate = function(numberOfRounds) {
 // args: the current dealer and all players
 Table.prototype.computePlayerAction = function(dealerHand, players) {
 	var action;
+	var loopCount = 0;
 	players.forEach(function(player) {
 		// initital action is hit to keep trigger the loop
 
 		do {
+			if (loopCount > 100) {
+				debugger;
+			}
 			var playerHand = player.hand;
 
 			var playerValue = this.getTotalValue(playerHand);
 
 			action = this.getPlayerAction(dealerHand, playerHand, playerValue, player);
+			loopCount++;
 		} while (action === 'hit');
 	}, this);
 
@@ -185,56 +190,30 @@ Table.prototype.computeDealerAction = function(dealer, players) {
 
 		// loop through all players that doesn't have lost and check who has won
 		players.forEach(function(player) {
-			if (
-				player.action !== 'loose' &&
-				player.action !== 'win' &&
-				player.action !== 'tie'
-			) {
-				if (this.pontoon(this.dealer.hand)) {
-					player.action = 'loose';
-					player.looses++;
-					return;
-				}
-				// loop through all saved values of player
-				// normally one but more then 1 when splitted (2)
-				if (player.values) {
-					player.values.forEach(function(value) {
-						if (value > dealer.totalValue) {
-							player.action = 'win';
-							player.wins++;
-						} else if (value === dealer.totalValue) {
-							player.action = 'tie';
-							player.ties++;
-						} else {
-							player.action = 'loose';
-							player.looses++;
-						}
-					});
-				} else {
-					if (player.totalValue > dealer.totalValue) {
+			// loop through all saved values of player
+			// normally one but more then 1 when splitted (2)
+			if (player.values) {
+				player.values.forEach(function(value) {
+					if (this.pontoon(this.dealer.hand)) {
+						player.action = 'loose';
+						player.looses++;
+						return;
+					} else if (value > dealer.totalValue) {
 						player.action = 'win';
 						player.wins++;
-					} else if (player.totalValue === dealer.totalValue) {
+					} else if (value === dealer.totalValue) {
 						player.action = 'tie';
 						player.ties++;
 					} else {
 						player.action = 'loose';
 						player.looses++;
 					}
-				}
+				});
 			}
 		}, this);
 	} else {
 		players.forEach(function(player) {
-			if (
-				player.action !== 'loose' &&
-				player.action !== 'win' &&
-				player.action !== 'tie' &&
-				!player.split
-			) {
-				player.action = 'win';
-				player.wins++;
-			} else if (player.split) {
+			if (player.values) {
 				player.values.forEach(function(value) {
 					player.action = 'win';
 					player.wins++;
@@ -305,6 +284,14 @@ Table.prototype.getPlayerAction = function(
 Table.prototype.win = function(player) {
 	if (player.split !== true) {
 		player.action = 'win';
+	}
+
+	// if player has won with double down count win as 2
+
+	if (player.double) {
+		debugger;
+		player.action = 'win';
+		player.wins++;
 	}
 
 	player.wins++;
@@ -432,7 +419,7 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 	var dealerUpCard = dealer.hand[0].value;
 	var playerHasAce = this.hasAce(playerHand);
 	var playerHasDouble = this.isDouble(playerHand);
-	// debugger;
+	debugger;
 
 	switch (true) {
 		/* ====== cases when player should stand =======*/
@@ -807,7 +794,7 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 
 		// case when you have > 21 but an ace in hand, count it as one
 		case playerTotalValue > 21 && playerHasAce && !playerHasDouble:
-			this.handleAce(player);
+			this.handleAce(playerHand, player);
 			return player.action;
 			break;
 
@@ -826,14 +813,16 @@ Table.prototype.edgeCase = function(player, dealer, playerTotalValue, playerHand
 	}
 };
 
-Table.prototype.handleAce = function(player) {
+Table.prototype.handleAce = function(playerHand, player) {
 	// loop through hand and map the ace card value to 1
-
-	player.hand.forEach(function(card) {
-		if (card.value === 11) {
+	var playerTotalValue;
+	debugger;
+	playerHand.forEach(function(card) {
+		playerTotalValue = this.getPlayerTotalValue(player);
+		if (card.value === 11 && playerTotalValue > 21) {
 			card.value = 1;
 		}
-	});
+	}, this);
 	player.action = 'hit';
 };
 
@@ -847,6 +836,9 @@ Table.prototype.double = function(player) {
 	this.dealer.addCardsToHand(newCard, player.hand);
 
 	var currentValue = this.getPlayerTotalValue(player);
+	if (currentValue > 21) {
+		this.handleAce(player.hand, player);
+	}
 
 	this.stand(player, currentValue);
 };
@@ -866,10 +858,13 @@ Table.prototype.split = function(player) {
 	newCard = this.dealer.dealCards(1);
 	this.dealer.addCardsToHand(newCard, splitHand[1]);
 	// console.log(splitHand);
-
+	var loopcount = 0;
 	// add cards to first hand until !hit
 	for (var i = 0; i < 2; i++) {
 		do {
+			if (loopcount > 100) {
+				debugger;
+			}
 			var playerHand = splitHand[i];
 			var playerValue = this.getTotalValue(playerHand);
 
@@ -879,6 +874,7 @@ Table.prototype.split = function(player) {
 				playerValue,
 				player
 			);
+			loopcount++;
 		} while (action === 'hit');
 	}
 };
